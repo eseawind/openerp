@@ -1,0 +1,27 @@
+
+# Create the OpenERP user that will own and run the application
+sudo adduser --system --home=/opt/openerp --group openerp
+
+# Login to openerp user from the command line
+sudo su - luzerp -s /bin/bash
+
+# Change ownership
+sudo chown -R luzerp: *
+
+# Backup postgres database
+pg_dump -U francisco test -f mydb.sql
+
+# Restore postgres databades
+psql -U francisco -d database -f mydb.sql
+
+# Drop all tables
+* Create sql script whitch remove all existing tables for desired database, in our case "my_dbname"
+
+psql -t -d test -c "SELECT 'DROP TABLE ' || n.nspname || '.' ||
+c.relname || ' CASCADE;' FROM pg_catalog.pg_class AS c LEFT JOIN
+pg_catalog.pg_namespace AS n ON n.oid = c.relnamespace WHERE relkind =
+'r' AND n.nspname NOT IN ('pg_catalog', 'pg_toast') AND
+pg_catalog.pg_table_is_visible(c.oid)" >/tmp/droptables
+
+* Run above created script
+psql -d my_dbname -f /tmp/droptables

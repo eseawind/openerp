@@ -1,0 +1,4 @@
+client/*
+.bzr/
+.bzrignore
+tmp.txt
